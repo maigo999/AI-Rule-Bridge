@@ -1,0 +1,62 @@
+{
+  "name": "ai-rule-bridge",
+  "version": "1.0.0",
+  "description": "AI development tools rule management CLI (MVP) - Manages project rules for AI tools and automatically generates them in each tool's specific format",
+  "main": "src/cli.js",
+  "bin": {
+    "arb": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/cli.js",
+    "test": "jest",
+    "lint": "eslint src/",
+    "build": "npm run lint && npm run test"
+  },
+  "keywords": [
+    "ai",
+    "development",
+    "tools",
+    "rules",
+    "cli",
+    "copilot",
+    "cursor",
+    "claude",
+    "windsurf",
+    "cline",
+    "mvp",
+    "generator"
+  ],
+  "author": {
+    "name": "Your Name",
+    "email": "your.email@example.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/ai-rule-bridge.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/ai-rule-bridge/issues"
+  },
+  "homepage": "https://github.com/yourusername/ai-rule-bridge#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "commander": "^11.1.0",
+    "fs-extra": "^11.2.0",
+    "js-yaml": "^4.1.0",
+    "handlebars": "^4.7.8",
+    "chalk": "^4.1.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.55.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ]
+  }
+} 
