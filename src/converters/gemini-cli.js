@@ -1,5 +1,5 @@
 const { BaseConverter } = require('./base-converter');
-const { fileUtils } = require('../utils/file-utils');
+
 
 class GeminiCliConverter extends BaseConverter {
   constructor(config) {
