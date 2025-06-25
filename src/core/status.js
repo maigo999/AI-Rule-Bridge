@@ -1,6 +1,5 @@
 const path = require('path');
 const { fileUtils } = require('../utils/file-utils');
-const { RuleParser } = require('./parser');
 
 /**
  * ステータス確認機能
@@ -93,7 +92,7 @@ class StatusChecker {
   /**
    * ツール固有の問題をチェック
    */
-  checkToolIssues(toolName, toolConfig, toolStatus) {
+  checkToolIssues(toolName, toolConfig, _toolStatus) {
     const issues = [];
 
     // 出力パスの確認

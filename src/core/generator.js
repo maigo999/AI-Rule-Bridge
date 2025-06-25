@@ -4,6 +4,8 @@ const { WindsurfConverter } = require('../converters/windsurf');
 const { CursorConverter } = require('../converters/cursor');
 const { ClaudeConverter } = require('../converters/claude');
 const { ClineConverter } = require('../converters/cline');
+const { OpenAICodexConverter } = require('../converters/openai-codex');
+const { GeminiCliConverter } = require('../converters/gemini-cli');
 const { logger } = require('../utils/logger');
 
 /**
@@ -17,7 +19,9 @@ class Generator {
       windsurf: new WindsurfConverter(config),
       cursor: new CursorConverter(config),
       claude: new ClaudeConverter(config),
-      cline: new ClineConverter(config)
+      cline: new ClineConverter(config),
+      'openai-codex': new OpenAICodexConverter(config),
+      'gemini-cli': new GeminiCliConverter(config)
     };
   }
 
@@ -41,19 +45,20 @@ class Generator {
         try {
           logger.debug(`Generating ${toolName} files...`);
           
-          // ツールに応じて処理方法を変更
-          let converted;
-          if (this.supportMultipleFiles(toolName)) {
-            // 複数ファイル対応ツール：各ルールを個別ファイルとして生成
-            converted = unifiedRules.map(rule => converter.convert(rule));
+          let result;
+          if (typeof converter.generateFromRules === 'function' && toolName !== 'copilot' && toolName !== 'windsurf' && toolName !== 'cursor' && toolName !== 'claude' && toolName !== 'cline') {
+            const singleFile = converter.generateFromRules(unifiedRules);
+            result = await converter.writeFiles(singleFile);
           } else {
-            // 単一ファイルツール：ルールをマージして生成
-            const mergedRule = parser.mergeRules(unifiedRules);
-            converted = converter.convert(mergedRule);
+            let converted;
+            if (this.supportMultipleFiles(toolName)) {
+              converted = unifiedRules.map(rule => converter.convert(rule));
+            } else {
+              const mergedRule = parser.mergeRules(unifiedRules);
+              converted = converter.convert(mergedRule);
+            }
+            result = await converter.writeFiles(converted);
           }
-          
-          // ファイル書き込み
-          const result = await converter.writeFiles(converted);
           results[toolName] = result;
           
           if (result.success) {
@@ -102,47 +107,36 @@ class Generator {
       throw new Error('No rule files found in .arb/rules/');
     }
 
-    // 変換と生成
     const converter = this.converters[toolName];
-    let converted;
-    
-    if (this.supportMultipleFiles(toolName)) {
-      // 複数ファイル対応ツール：各ルールを個別ファイルとして生成
-      converted = unifiedRules.map(rule => converter.convert(rule));
+    let result;
+    if (typeof converter.generateFromRules === 'function' && toolName !== 'copilot' && toolName !== 'windsurf' && toolName !== 'cursor' && toolName !== 'claude' && toolName !== 'cline') {
+      const singleFile = converter.generateFromRules(unifiedRules);
+      result = await converter.writeFiles(singleFile);
     } else {
-      // 単一ファイルツール：ルールをマージして生成
-      const mergedRule = parser.mergeRules(unifiedRules);
-      if (!mergedRule) {
-        throw new Error('Failed to merge rule files');
+      let converted;
+      if (this.supportMultipleFiles(toolName)) {
+        converted = unifiedRules.map(rule => converter.convert(rule));
+      } else {
+        const mergedRule = parser.mergeRules(unifiedRules);
+        if (!mergedRule) {
+          throw new Error('Failed to merge rule files');
+        }
+        converted = converter.convert(mergedRule);
       }
-      converted = converter.convert(mergedRule);
+      result = await converter.writeFiles(converted);
     }
-    
-    const result = await converter.writeFiles(converted);
     return result;
+  }
+
+  static async generateAll(config) {
+    const generator = new Generator(config);
+    return await generator.generateAll();
+  }
+
+  static async generateForTool(toolName, config) {
+    const generator = new Generator(config);
+    return await generator.generateForTool(toolName);
   }
 }
 
-/**
- * 設定を読み込んで全ツール用ファイルを生成
- */
-async function generateAll() {
-  const parser = new RuleParser();
-  const config = await parser.loadConfig();
-  
-  const generator = new Generator(config);
-  return await generator.generateAll();
-}
-
-/**
- * 設定を読み込んで特定ツール用ファイルを生成
- */
-async function generateForTool(toolName) {
-  const parser = new RuleParser();
-  const config = await parser.loadConfig();
-  
-  const generator = new Generator(config);
-  return await generator.generateForTool(toolName);
-}
-
-module.exports = { Generator, generateAll, generateForTool }; 
+module.exports = { Generator }; 

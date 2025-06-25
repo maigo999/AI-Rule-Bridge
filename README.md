@@ -3,159 +3,163 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 
-AI開発ツール向けルール管理CLI（MVP版）- プロジェクトルールを各AIツール固有の形式で自動生成
+Rule Management CLI for AI Development Tools (MVP) - Automatically generate project rules in the specific format for each AI tool.
 
-## 概要
+## Overview
 
-AI Rule Bridge（ARB）は、複数のAI開発ツール（GitHub Copilot、Cursor、Claude、Windsurf、Clineなど）で使用するプロジェクトルールを一元管理し、各ツール固有の形式で自動生成するシンプルなNode.js CLIツールです。
+AI Rule Bridge (ARB) is a simple Node.js CLI tool that centralizes the management of project rules for multiple AI development tools (such as GitHub Copilot, Cursor, Claude, Windsurf, Cline, OpenAI Codex, and Gemini CLI) and automatically generates them in each tool's specific format.
 
-### 主な機能
+### Main Features
 
-- 📝 **統一ルール管理**: `.arb/rules/`ディレクトリで全AIツールのルールを管理
-- 🔄 **自動生成**: 統一ルールから各ツール固有のファイルを自動生成
-- 🛠️ **複数ツール対応**: 5つの主要AI開発ツールをサポート
-- 📏 **文字数制限対応**: ツール固有の文字数制限を自動処理
-- 💾 **バックアップ機能**: 既存ファイルのオプションバックアップ
+- 📝 **Unified Rule Management**: Manage rules for all AI tools in the `.arb/rules/` directory.
+- 🔄 **Automatic Generation**: Automatically generate tool-specific files from unified rules.
+- 🛠️ **Multi-tool Support**: Supports 7 major AI development tools.
+- 📏 **Character Limit Handling**: Automatically handles tool-specific character limits.
+- 💾 **Backup Functionality**: Optional backup of existing files.
 
-### 対応AIツール
+### Supported AI Tools
 
-| ツール | 出力場所 | 形式 | 制限事項 |
+| Tool | Output Location | Format | Limitations |
 |--------|----------|------|----------|
-| GitHub Copilot | `.github/copilot-instructions.md` | Markdown | プロジェクト専用 |
-| Windsurf Cascade | `.windsurf/rules/` | Markdown | ~6000文字/ファイル、12000文字合計 |
-| Cursor | `.cursor/rules/` | MDC | フロントマター + Markdown |
-| Claude Code | `CLAUDE.md` | Markdown | シンプル形式 |
-| Cline | `.clinerules` | Markdown | 単一ファイル |
+| GitHub Copilot | `.github/copilot-instructions.md` | Markdown | Project-specific |
+| Windsurf Cascade | `.windsurf/rules/` | Markdown | ~6000 chars/file, 12000 chars total |
+| Cursor | `.cursor/rules/` | MDC | Front-matter + Markdown |
+| Claude Code | `CLAUDE.md` | Markdown | Simple format |
+| Cline | `.clinerules` | Markdown | Single file |
+| OpenAI Codex | `AGENTS.md` | Markdown | Simple format |
+| Gemini CLI | `GEMINI.md` | Markdown | Simple format |
 
-## インストール
+## Installation
 
 ```bash
 npm install -g ai-rule-bridge
 ```
 
-## クイックスタート
+## Quick Start
 
-1. **プロジェクト初期化**:
+1. **Initialize Project**:
    ```bash
    arb init [project-name]
    ```
 
-2. **ルール編集**: `.arb/rules/*.md`ファイルにプロジェクトルールを追加
+2. **Edit Rules**: Add project rules to `.arb/rules/*.md` files.
 
-3. **AIツールファイル生成**:
+3. **Generate AI Tool Files**:
    ```bash
    arb generate
    ```
 
-4. **ステータス確認**:
+4. **Check Status**:
    ```bash
    arb status
    ```
 
 
-## ディレクトリ構造
+## Directory Structure
 
 ```
 your-project/
 ├── .arb/
-│   ├── config.yaml          # 設定ファイル
-│   └── rules/               # ルールファイルディレクトリ
-│       ├── project-rules.md # サンプルルールファイル
-│       └── *.md            # カスタムルールファイル
+│   ├── config.yaml          # Configuration file
+│   └── rules/               # Rule file directory
+│       ├── project-rules.md # Sample rule file
+│       └── *.md            # Custom rule files
 ├── .github/
-│   └── copilot-instructions.md  # Copilot用生成ファイル
+│   └── copilot-instructions.md  # Generated file for Copilot
 ├── .windsurf/
-│   └── rules/               # Windsurf用生成ファイル
+│   └── rules/               # Generated files for Windsurf
 ├── .cursor/
-│   └── rules/               # Cursor用生成ファイル
-├── CLAUDE.md                # Claude用生成ファイル
-└── .clinerules             # Cline用生成ファイル
+│   └── rules/               # Generated files for Cursor
+├── CLAUDE.md                # Generated file for Claude
+├── .clinerules             # Generated file for Cline
+├── AGENTS.md                # Generated file for OpenAI Codex
+└── GEMINI.md                # Generated file for Gemini CLI
 ```
 
-## ルールファイル
+## Rule Files
 
-`.arb/rules/`ディレクトリのルールファイルはMarkdown形式です：
+Rule files in the `.arb/rules/` directory are in Markdown format:
 
 ```markdown
-# プロジェクトルール
+# Project Rules
 
-## コーディング規約
-- 関数名はcamelCaseを使用する
-- 変数名は意味のある名前を付ける
-- コメントは日本語で記述する
+## Coding Conventions
+- Use camelCase for function names.
+- Use meaningful names for variables.
+- Write comments in English.
 
-## ファイル構成
-- src/ ディレクトリにソースコードを配置
-- tests/ ディレクトリにテストファイルを配置
+## File Structure
+- Place source code in the src/ directory.
+- Place test files in the tests/ directory.
 
-## AI開発ガイドライン
-- コードの可読性を重視する
-- 適切なエラーハンドリングを実装する
-- テストを書いて品質を保つ
+## AI Development Guidelines
+- Emphasize code readability.
+- Implement appropriate error handling.
+- Write tests to maintain quality.
 ```
 
-## 使用例
+## Usage Examples
 
-### 基本的な使用方法
+### Basic Usage
 
 ```bash
-# プロジェクト初期化
+# Initialize project
 arb init my-ai-project
 
-# ルール編集（プロジェクト固有のルールを追加）
-# .arb/rules/project-rules.md を編集
+# Edit rules (add project-specific rules)
+# Edit .arb/rules/project-rules.md
 
-# 全ツールファイル生成
+# Generate all tool files
 arb generate
 
-# ステータス確認
+# Check status
 arb status
 ```
 
-### カスタム設定
+### Custom Configuration
 
-`.arb/config.yaml`を編集して設定をカスタマイズできます：
+You can customize settings by editing `.arb/config.yaml`:
 
 ```yaml
-# 特定ツールを無効化
+# Disable a specific tool
 targets:
   copilot:
-    enabled: false  # Copilot生成を無効化
+    enabled: false  # Disable Copilot generation
 ```
 
-## 要件
+## Requirements
 
-- Node.js 18+ (LTS推奨)
-- npm または yarn
+- Node.js 18+ (LTS recommended)
+- npm or yarn
 
-## 開発
+## Development
 
 ```bash
-# リポジトリクローン
+# Clone repository
 git clone https://github.com/maigo999/AI-Rule-Bridge.git
 cd AI-Rule-Bridge
 
-# 依存関係インストール
+# Install dependencies
 npm install
 
-# テスト実行
+# Run tests
 npm test
 
-# リント実行
+# Run lint
 npm run lint
 ```
-## ライセンス
+## License
 
 MIT License
 
-## ロードマップ
+## Roadmap
 
-- [ ] ウォッチモード（ファイル変更監視）
-- [ ] Web UI版
-- [ ] CI/CD統合
-- [ ] カスタムテンプレートサポート
-- [ ] 追加AIツールサポート
+- [ ] Watch mode (file change monitoring)
+- [ ] Web UI version
+- [ ] CI/CD integration
+- [ ] Custom template support
+- [ ] Support for additional AI tools
 
 ---
 
-**AI Rule Bridge** - AIツール間のルール管理を簡単に 🤖✨ 
+**AI Rule Bridge** - Easily manage rules across AI tools 🤖✨

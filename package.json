@@ -4,13 +4,19 @@
   "description": "AI development tools rule management CLI (MVP) - Manages project rules for AI tools and automatically generates them in each tool's specific format",
   "main": "src/cli.js",
   "bin": {
-    "arb": "./src/cli.js"
+    "arb": "src/cli.js"
   },
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "start": "node src/cli.js",
     "test": "jest",
     "lint": "eslint src/",
-    "build": "npm run lint && npm run test"
+    "build": "npm run lint",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "ai",
@@ -32,7 +38,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/maigo999/AI-Rule-Bridge.git"
+    "url": "git+https://github.com/maigo999/AI-Rule-Bridge.git"
   },
   "bugs": {
     "url": "https://github.com/maigo999/AI-Rule-Bridge/issues"

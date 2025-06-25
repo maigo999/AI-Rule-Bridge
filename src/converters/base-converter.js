@@ -14,8 +14,15 @@ class BaseConverter {
   /**
    * 統一データから各ツール形式に変換（サブクラスで実装）
    */
-  convert(unifiedRule) {
+  convert(_unifiedRule) {
     throw new Error('convert method must be implemented by subclass');
+  }
+
+  /**
+   * 複数ルールから単一ファイルを生成（単一ファイルコンバータで実装）
+   */
+  generateFromRules(_unifiedRules) {
+    throw new Error('generateFromRules method must be implemented by subclass');
   }
 
   /**

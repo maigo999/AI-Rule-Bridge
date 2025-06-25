@@ -1,0 +1,31 @@
+version: '1.0'
+project:
+  name: AI-Rule-Bridge
+targets:
+  copilot:
+    enabled: true
+    output: .github/copilot-instructions/
+  windsurf:
+    enabled: true
+    output: .windsurf/rules/
+  cursor:
+    enabled: true
+    output: .cursor/rules/
+  claude:
+    enabled: true
+    output: CLAUDE.md
+  cline:
+    enabled: true
+    output: .clinerules
+  openai-codex:
+    enabled: true
+    output: AGENTS.md
+  gemini-cli:
+    enabled: true
+    output: GEMINI.md
+rules:
+  merge_strategy: append
+versioning:
+  config_version: '1.0'
+  backup_existing: false
+  migration_auto: true

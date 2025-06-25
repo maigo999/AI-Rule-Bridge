@@ -2,10 +2,9 @@
 
 const { Command } = require('commander');
 const chalk = require('chalk');
-const path = require('path');
-const fs = require('fs-extra');
 const { initProject } = require('./core/init');
-const { generateAll } = require('./core/generator');
+const { Generator } = require('./core/generator');
+const { RuleParser } = require('./core/parser');
 const { checkStatus } = require('./core/status');
 const { logger } = require('./utils/logger');
 
@@ -36,10 +35,21 @@ program
 program
   .command('generate')
   .description('Generate AI tool files from .arb/rules/')
-  .action(async () => {
+  .option('--openai-codex', 'Generate only for OpenAI Codex')
+  .option('--gemini-cli', 'Generate only for Gemini CLI')
+  .action(async (options) => {
     try {
       logger.info('Generating AI tool files...');
-      const results = await generateAll();
+      const parser = new RuleParser();
+      const config = await parser.loadConfig();
+      let results;
+      if (options.openaiCodex) {
+        results = { 'openai-codex': await Generator.generateForTool('openai-codex', config) };
+      } else if (options.geminiCli) {
+        results = { 'gemini-cli': await Generator.generateForTool('gemini-cli', config) };
+      } else {
+        results = await Generator.generateAll(config);
+      }
       
       // 結果表示
       Object.entries(results).forEach(([tool, result]) => {
@@ -84,8 +94,8 @@ program
       logger.info('\n=== Target Tools ===');
       Object.entries(status.tools).forEach(([tool, info]) => {
         const enabled = info.enabled ? '✓' : '✗';
-        const status = info.outputExists ? 'exists' : 'missing';
-        logger.info(`${enabled} ${tool}: ${info.output} (${status})`);
+        const toolStatus = info.outputExists ? 'exists' : 'missing';
+        logger.info(`${enabled} ${tool}: ${info.output} (${toolStatus})`);
       });
       
       // 問題診断
