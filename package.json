@@ -1,6 +1,6 @@
 {
   "name": "ai-rule-bridge",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AI development tools rule management CLI (MVP) - Manages project rules for AI tools and automatically generates them in each tool's specific format",
   "main": "src/cli.js",
   "bin": {
@@ -29,6 +29,8 @@
     "claude",
     "windsurf",
     "cline",
+    "gemini",
+    "codex",
     "generator"
   ],
   "author": {
